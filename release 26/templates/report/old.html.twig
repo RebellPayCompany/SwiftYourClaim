@@ -1,0 +1,139 @@
+{% extends 'layout_panel.html.twig' %}
+
+{% block head %}
+    {{ 'global.old'|trans }}
+{% endblock %}
+
+{% block head_small %}
+    <span class="text-lowercase">{{ 'global.reports'|trans }}</span>
+{% endblock %}
+
+{% block body %}
+    <div class="box box-primary">
+        <div class="box-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tr class="thpt">
+                        <th class="thpt" width="25%">
+                            {{ knp_pagination_sortable(reports, 'global.number'|trans, 'r.number') }}
+                        </th>
+                        <th class="thpt" width="25%">
+                            {{ knp_pagination_sortable(reports, 'global.send_date'|trans, 'r.date') }}
+                        </th>
+                        <th class="thpt" width="25%">
+                            {{ knp_pagination_sortable(reports, 'global.status'|trans, 'r.status') }}
+                        </th>
+                        <th></th>
+                    </tr>
+                    {% for report in reports %}
+                        <tr>
+                            <td>{{ report.number }}</td>
+                            <td>{{ report.date|date("d.m.Y") }}</td>
+                            <td>
+                            <span class="report-status-{{ report.status }}">
+                                <span class="fa fa-map-marker"></span>
+                                {{ report.statusName|trans }}
+                            </span>
+                            </td>
+                            <td>
+                                {% if report.status == constant('STATUS_REJECTED', report) and report.reasonRejection %}
+                                    <a href="javascript:void(0)"
+                                       class="report-reason-rejection-button"
+                                       data-id="{{ report.id }}">{{ 'global.reason_rejection'|trans }}</a>
+                                {% endif %}
+                            </td>
+                            <td style="vertical-align: middle" class="text-right">
+                                <a href="javascript:void(0)" class="report-view-button"
+                                   data-id="{{ report.id }}">
+                                    <span class="fa fa-file-text text-danger"></span>
+                                    {{ 'global.view_report'|trans }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">{{ 'global.no_reports'|trans }}.</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                <div class="text-right">
+                    {{ knp_pagination_render(reports) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="rejectedModal" tabindex="-1" role="dialog" aria-labelledby="rejectedModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="text-center">
+                        <h3>{{ 'global.reason_rejection'|trans }}</h3>
+                    </div>
+
+                    <div class="modal-body-text margin-top-30 margin-bottom-30"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{ 'global.report_view'|trans }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="margin-top-10">
+                        <div id="view-modal-data" class="margin-top-20"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $(".report-reason-rejection-button").click(function () {
+                var id = $(this).data("id");
+                var url = Routing.generate('report_reason_rejection', {'report': id});
+
+                $.ajax({
+                    method: "POST",
+                    url: url,
+                }).done(function (msg) {
+                    $("#rejectedModal .modal-body-text").html(msg);
+                    $("#rejectedModal").modal();
+                });
+            });
+
+            $(".report-view-button").click(function () {
+                var id = $(this).data("id");
+                reportView(id);
+            });
+        });
+
+        {% if report %}
+        reportView({{ report.id }});
+        {% endif %}
+
+        function reportView(id) {
+            var url = Routing.generate('report_unit_view', {'report': id});
+
+            $.ajax({
+                method: "POST",
+                url: url,
+            }).done(function (msg) {
+                $("#view-modal-data").html(msg);
+                $("#viewModal").modal();
+            });
+        }
+    </script>
+{% endblock %}

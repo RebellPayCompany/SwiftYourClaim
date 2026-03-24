@@ -1,0 +1,137 @@
+{% set _route = app.request.get('_route') %}
+
+
+<ul class="sidebar-menu" data-widget="tree">
+    <li class="header">Menu</li>
+
+    <li{% if _route == 'notification_list' %} class="active"{% endif %}>
+        <a href="{{ path('notification_list') }}">
+            <i class="fa fa-calendar"></i> <span>{{ 'global.notifications'|trans }}</span>
+            <span class="pull-right-container">
+                {% if countNewNotification(app.user) %}
+                    <small class="label pull-right bg-red">{{ countNewNotification(app.user) }}</small>
+                {% endif %}
+            </span>
+        </a>
+    </li>
+
+    {% if is_granted('ROLE_ISSUER') %}
+        <li class="treeview {% if _route == 'report_summary_list' or _route == 'report_unit_list' %}active menu-open{% endif %}">
+            <a href="#">
+                <i class="fa fa-files-o"></i>
+                <span>{{ 'global.reports'|trans }}</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+            </a>
+            <ul class="treeview-menu">
+                <li{% if _route == 'report_summary_list' %} class="active"{% endif %}>
+                    <a href="{{ path('report_summary_list') }}">
+                        <i class="fa fa-circle-o"></i>
+                        {{ 'global.reports_summary'|trans }}
+                    </a>
+                </li>
+                <li{% if _route == 'report_unit_list' %} class="active"{% endif %}>
+                    <a href="{{ path('report_unit_list') }}">
+                        <i class="fa fa-circle-o"></i>
+                        {{ 'global.reports_unit'|trans }}
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li{% if _route == 'user_managers' or _route == 'user_issuers' %} class="active"{% endif %}>
+            <a href="{{ path('user_managers') }}">
+                <i class="fa fa-user-circle-o"></i> <span>{{ 'global.users'|trans }}</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+            </a>
+        </li>
+
+        <li{% if _route == 'company_data' %} class="active"{% endif %}>
+            <a href="{{ path('company_data') }}">
+                <i class="fa fa-address-card-o"></i> <span>{{ 'global.company_data'|trans }}</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+            </a>
+        </li>
+
+        <li{% if _route == 'document_list' %} class="active"{% endif %}>
+            <a href="{{ path('document_list') }}">
+                <i class="fa fa-file-text"></i> <span>{{ 'global.patterns_letters'|trans }}</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+            </a>
+        </li>
+
+        <li{% if _route == 'report_statistic' %} class="active"{% endif %}>
+            <a href="{{ path('report_statistic') }}">
+                <i class="fa fa-bar-chart"></i> <span>{{ 'global.statistic'|trans }}</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+            </a>
+        </li>
+
+        <li{% if _route == 'payment_account' %} class="active"{% endif %}>
+            <a href="{{ path('payment_account') }}">
+                <i class="fa fa-address-card-o"></i> <span>{{ 'global.payment'|trans }}</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+            </a>
+        </li>
+    {% endif %}
+
+    {% if is_granted('ROLE_MANAGER') %}
+
+        <li{% if _route == 'report_my' %} class="active"{% endif %}>
+            <a href="{{ path('report_my') }}">
+                <i class="fa fa-clipboard"></i> <span>{{ 'global.my_report'|trans }}</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+            </a>
+        </li>
+
+        <li{% if _route == 'report_old' %} class="active"{% endif %}>
+            <a href="{{ path('report_old') }}">
+                <i class="fa fa-files-o"></i> <span>{{ 'global.old_reports'|trans }}</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+            </a>
+        </li>
+
+        <li{% if _route == 'document_list_manager' %} class="active"{% endif %}>
+            <a href="{{ path('document_list_manager') }}">
+                <i class="fa fa-file-text"></i> <span>{{ 'global.documents'|trans }}</span>
+                <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+            </a>
+        </li>
+    {% endif %}
+    {{ render(controller('App\\Controller\\UserController::changeRoleButton')) }}
+
+    <li{% if _route == 'user_my_account' %} class="active"{% endif %}>
+        <a href="{{ path('user_my_account') }}">
+            <i class="fa fa-cog"></i> <span>{{ 'global.my_account' |trans }}</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+    </li>
+
+    <li>
+        <a href="{{ path('security_logout') }}">
+            <i class="fa fa-power-off"></i> <span>{{ 'global.logout'|trans }}</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+    </li>
+</ul>

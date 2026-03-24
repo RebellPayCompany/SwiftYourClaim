@@ -1,0 +1,72 @@
+{% extends 'layout_front.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <div class="registration">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="text-uppercase box-title">{{ 'global.registration'|trans }}</h3>
+                </div>
+                <div class="box-body">
+                    <h2 class="text-center">{{ 'global.step'|trans }} 2 <span class="small">/ 5</span></h2>
+                    <h3 class="text-center">{{ 'global.fill_organization_data'|trans }}</h3>
+                    <div class="row margin-top-40">
+                        <div class="col-sm-offset-3 col-sm-6 form2">
+                            {{ form_start(form) }}
+                            <div class="form-group">
+                                {{ form_label(form.krs) }}
+                                {{ form_widget(form.krs) }}
+                                {{ form_errors(form.krs) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.nip) }}
+                                {{ form_widget(form.nip) }}
+                                {{ form_errors(form.nip) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.regon) }}
+                                {{ form_widget(form.regon) }}
+                                {{ form_errors(form.regon) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.name) }}
+                                {{ form_widget(form.name) }}
+                                {{ form_errors(form.name) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.address) }}
+                                {{ form_widget(form.address) }}
+                                {{ form_errors(form.address) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.phone) }}
+                                {{ form_widget(form.phone) }}
+                                {{ form_errors(form.phone) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.email) }}
+                                {{ form_widget(form.email) }}
+                                {{ form_errors(form.email) }}
+                            </div>
+                            <div class="form-group">
+                                {{ form_label(form.kni) }}
+                                {{ form_widget(form.kni) }}
+                                {{ form_errors(form.kni) }}
+                            </div>
+                            <div class="margin-top-40 margin-bottom-80">
+                                <div class="pull-left width-200">
+                                    <a href="{{ path('user_registration_krs') }}"
+                                       class="btn btn-default">{{ 'global.back'|trans }}</a>
+                                </div>
+                                <div class="pull-right width-200">
+                                    {{ form_row(form.submit) }}
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,238 @@
+{% extends 'layout_panel.html.twig' %}
+
+{% block head %}
+    {% if manager %}
+        {{ manager.firstName }} {{ manager.lastName }}:
+    {% endif %}
+    {{ 'global.reports'|trans }}
+{% endblock %}
+
+{% block head_small %}
+    {{ 'global.units2'|trans }}
+{% endblock %}
+
+{% block body %}
+    <div class="box box-primary">
+        {% if manager %}
+            {% set _route = app.request.get('_route') %}
+            <ul class="nav nav-tabs" style="margin-bottom: 20px">
+                <li {% if _route =='user_managers_view' %}class="active"{% endif %}><a
+                            href="{{ path('user_managers_view', {'manager': manager.id}) }}">{{ 'global.user_data'|trans }}</a>
+                </li>
+                <li {% if _route =='report_unit_list_manager' %}class="active"{% endif %}><a
+                            href="{{ path('report_unit_list_manager', {'manager': manager.id}) }}">{{ 'global.reports'|trans }}</a>
+                </li>
+            </ul>
+        {% endif %}
+        <div class="box-header">
+            <h3 class="text-uppercase box-title">{{ 'global.new_reports'|trans }}</h3>
+        </div>
+        <div class="box-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tr class="thpt">
+                        <th class="thpt" width="16%">{{ 'global.first_name'|trans }}</th>
+                        <th class="thpt" width="16%">{{ 'global.last_name'|trans }}</th>
+                        <th class="thpt" width="16%">{{ 'global.generated_date'|trans }}</th>
+                        <th class="thpt" width="16%">{{ 'global.status'|trans }}</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    {% for report in newReports %}
+                        <tr>
+                            <td style="vertical-align: middle;">{{ report.data.firstName }}</td>
+                            <td style="vertical-align: middle">{{ report.data.lastName }}</td>
+                            <td style="vertical-align: middle">{{ report.date|date("d.m.Y") }}</td>
+                            <td style="vertical-align: middle">
+                            <span class="report-status-{{ report.status }}">
+                                <span class="fa fa-map-marker"></span>
+                                {{ report.statusName|trans }}
+                            </span>
+                            </td>
+                            <td style="vertical-align: middle">
+                                <a href="javascript:void(0)" class="report-view-button btn btn-success"
+                                   data-id="{{ report.id }}">
+                                    <span class="fa fa-search-plus"></span>
+                                    {{ 'global.view_report'|trans }}
+                                </a>
+                            </td>
+                            <td style="vertical-align: middle">
+                                <a href="javascript:void(0)" class="btn btn-danger report-discard-button"
+                                   data-id="{{ report.id }}">
+                                    <span class="fa fa-remove"></span>
+                                    {{ 'global.discard'|trans }}
+                                </a>
+                            </td>
+                            <td class="text-right">
+                                <a href="{{ path('report_unit_accept', {'report': report.id}) }}"
+                                   class="btn btn-primary">
+                                    <span class="fa fa-check"></span>
+                                    {{ 'global.accept'|trans }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">{{ 'global.no_reports'|trans }}.</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row margin-top-40">
+        <div class="col-sm-4">
+            {% if not manager %}
+                {{ form_start(form) }}
+                {{ form_row(form.keyword) }}
+                {{ form_end(form) }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="box box-primary">
+        <div class="box-header">
+            <h3 class="text-uppercase box-title">{{ 'global.actual_reports'|trans }}</h3>
+        </div>
+        <div class="box-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tr class="thpt">
+                        <th class="thpt" width="16%">
+                            {{ knp_pagination_sortable(actualReports, 'global.first_name'|trans, 'd.firstName') }}
+                        <th class="thpt" width="16%">
+                            {{ knp_pagination_sortable(actualReports, 'global.last_name'|trans, 'd.lastName') }}
+                        </th>
+                        <th class="thpt" width="16%">
+                            {{ knp_pagination_sortable(actualReports, 'global.generated_date'|trans, 'r.date') }}
+                        </th>
+                        <th class="thpt" width="16%">
+                            {{ knp_pagination_sortable(actualReports, 'global.status'|trans, 'r.status') }}
+                        </th>
+                        <th></th>
+                    </tr>
+                    {% for report in actualReports %}
+                        <tr>
+                            <td style="vertical-align: middle;">{{ report.data.firstName }}</td>
+                            <td style="vertical-align: middle">{{ report.data.lastName }}</td>
+                            <td style="vertical-align: middle">{{ report.date|date("d.m.Y") }}</td>
+                            <td style="vertical-align: middle">
+                            <span class="report-status-{{ report.status }}">
+                                <span class="fa fa-map-marker"></span>
+                                {{ report.statusName|trans }}
+                            </span>
+                            </td>
+                            <td style="vertical-align: middle" class="text-right">
+                                <a href="javascript:void(0)" class="btn btn-success report-view-button"
+                                   data-id="{{ report.id }}">
+                                    <span class="fa fa-search-plus"></span>
+                                    {{ 'global.view_report'|trans }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4">{{ 'global.no_reports'|trans }}.</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                <div class="text-right">
+                    {{ knp_pagination_render(actualReports) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="discardModal" tabindex="-1" role="dialog" aria-labelledby="discardModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="text-center margin-bottom-50 margin-top-50">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3>{{ 'global.rejection_of_the_report'|trans }}?</h3>
+                        <p>{{ 'global.give_reason_for_rejection_of_report'|trans }}.</p>
+                        <p class="margin-top-20">
+                            <textarea class="form-control" style="height: 238px;" id="report-reason-desc"></textarea>
+                        </p>
+                        <div class="width-260 margin-top-30">
+                            <button class="btn btn-default" data-dismiss="modal"
+                                    aria-label="Close">{{ 'global.cancel'|trans }}</button>
+                            <button class="btn btn-danger margin-left-10"
+                                    id="report-discard-button-action">{{ 'global.discard_report'|trans }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">{{ 'global.report_view'|trans }}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="margin-top-10">
+                        <div id="view-modal-data" class="margin-top-20"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $(".report-discard-button").click(function () {
+                var id = $(this).data("id");
+                $("#report-discard-button-action").data("id", id);
+
+                $("#discardModal").modal();
+            });
+
+            $("#report-discard-button-action").click(function () {
+                var id = $(this).data("id");
+                var url = Routing.generate('report_unit_discard', {'report': id});
+                text = $("#report-reason-desc").val();
+
+                $.ajax({
+                    method: "POST",
+                    url: url,
+                    data: {'text': text},
+                }).done(function () {
+                    location.reload();
+                });
+            });
+
+            $(".report-view-button").click(function () {
+                var id = $(this).data("id");
+                reportView(id);
+            });
+
+            {% if report %}
+            reportView({{ report.id }});
+            {% endif %}
+        });
+
+        function reportView(id) {
+            var url = Routing.generate('report_unit_view', {'report': id});
+
+            $.ajax({
+                method: "POST",
+                url: url,
+            }).done(function (msg) {
+                $("#view-modal-data").html(msg);
+                $("#viewModal").modal();
+            });
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,337 @@
+{% extends 'layout_front.html.twig' %}
+
+{% form_theme form _self %}
+{% import _self as macros %}
+
+{% block body %}
+    <div class="container">
+        <div class="registration">
+            <div class="box box-primary">
+                <div class="box-header">
+                    <h3 class="text-uppercase box-title">{{ 'global.registration'|trans }}</h3>
+                </div>
+                <div class="box-body">
+                    <h2 class="text-center">{{ 'global.step'|trans }}
+                        {% if action == 'api' %}3{% else %}4{% endif %}
+                        <span class="small">/ 5</span></h2>
+                    <h3 class="text-center">
+                        {% if app.request.get('step') != 'confirmation' %}
+                            {{ 'global.give_manager_details'|trans }}
+                        {% else %}
+                            {{ 'global.confirmation'|trans }}
+                        {% endif %}
+                    </h3>
+                    <div class="form2 margin-top-40 padding-lr-100">
+                        <div class="row">
+                            <div class="col-sm-offset-1 col-sm-10">
+                                {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+                                <div class="collection"
+                                     data-prototype="{{ macros.managerCollectionItem(form.manager.vars.prototype)|e }}">
+                                    {{ form_row(form.manager) }}
+
+                                    {% if action == 'api' %}
+                                        <div class="panel panel-info">
+                                            <div class="panel-body text-center">
+                                                {{ 'global.register_add_manager_info'|trans }}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        {% if app.request.get('step') != 'confirmation' %}
+                                            <div class="text-center collection-add">
+                                                <div class="btn btn-success">
+                                                    <span class="fa fa-plus"></span> {{ 'global.add_manager_manually'|trans }}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+
+                                {% if app.request.get('step') != 'confirmation' %}
+                                    <div class="margin-bottom-20 margin-top-40">
+                                        <div class="pull-left">
+                                            <a href="{% if action == 'api' %}{{ path('user_registration_details') }}{% else %}{{ path('user_registration_managers') }}{% endif %}"
+                                               class="btn btn-default">{{ 'global.back'|trans }}</a>
+                                        </div>
+                                        <div class="text-center">
+                                            {{ form_row(form.submit) }}
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    {% do form.submit.setRendered %}
+                                    <div class="row margin-bottom-20 margin-top-40">
+                                        <div class="col-sm-12 width-260 text-right">
+                                            <a href="{{ path('user_managers') }}"
+                                               class="btn btn-primary">{{ 'global.go_to_panel'|trans }}</a>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {{ form_end(form) }}
+                            </div>
+                        </div>
+                    </div>
+                    {% include 'registration/register_instruction.html.twig' %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="summaryModal" tabindex="-1" role="dialog" aria-labelledby="summaryModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg2" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="text-center margin-bottom-90 margin-top-90">
+                        <h3>{{ 'global.summary'|trans }}</h3>
+                    </div>
+
+                    <div class="margin-bottom-60">
+                        <table class="table">
+                            <tr>
+                                <th>{{ 'global.first_last_name'|trans }}</th>
+                                <th>{{ 'global.position'|trans }}</th>
+                                <th>{{ 'global.email'|trans }}</th>
+                            </tr>
+                            {% for manager in company.manager %}
+                                <tr>
+                                    <td>{{ manager.firstName }} {{ manager.lastName }}</td>
+                                    <td>{{ manager.manager.position }}</td>
+                                    <td>{{ manager.email }}</td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                    </div>
+
+                    <div class="text-right margin-bottom-80 width-260">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">{{ 'global.return_to_editing'|trans }}</button>
+                        <a href="{{ path('user_registration_send_invitation') }}"
+                           class="btn btn-primary margin-left-30">{{ 'global.send_invitations'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmationModal" tabindex="-1" role="dialog" aria-labelledby="confirmationModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg2" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="text-center margin-bottom-90 margin-top-90">
+                        <h3>{{ 'global.confirmation'|trans }}</h3>
+                    </div>
+
+                    <div class="text-center">
+                        <p class="margin-bottom-40">{{ 'global.invitation_was_sended'|trans }}</p>
+
+                        <p class="margin-bottom-80">
+                            <small>{{ 'global.date_send'|trans }}</small>
+                            :<br/>
+                            {{ "now"|date("d.m.Y, H:i") }}
+                        </p>
+                    </div>
+
+                    <div class="text-center margin-bottom-80 width-260">
+                        <a href="{{ path('user_managers') }}"
+                           class="btn btn-primary margin-left-30">{{ 'global.go_to_panel'|trans }}</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        {% if app.request.get('step') == 'summary' %}
+        $("#summaryModal").modal();
+        {% endif %}
+
+        {% if app.request.get('step') == 'confirmation' %}
+        $("#confirmationModal").modal();
+        {% endif %}
+
+        $(".instruction-button").click(function() {
+            $("#instructionModal").modal();
+        });
+    </script>
+{% endblock %}
+
+{% block _registration_managers_manager_row %}
+    {% for child in form.children %}
+        <div class="margin-bottom-40 collection-item">
+            <div class="panel panel-primary">
+                <div class="panel-body register-manager">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="register-manager-name"
+                                 {% if not child.vars.valid %}style="display: none"{% endif %}>
+                                {{ child.firstName.vars.value }} {{ child.lastName.vars.value }}
+                            </div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div class="pull-right status-button">
+                                {% if app.request.get('step') != 'confirmation' %}
+                                    <span class="btn btn-danger register-manager-discard">
+                                        <span class="fa fa-remove"></span>
+                                        Odrzuć
+                                    </span>
+                                {% endif %}
+                                <span class="btn btn-success register-manager-details">
+                                    <span class="fa fa-search"></span>
+                                    Szczegóły
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="register-manager-data-row"
+                         {% if not child.vars.valid %}style="display: block"{% endif %}>
+                        <div class="row margin-top-30">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(child.firstName) }}
+                                    {{ form_widget(child.firstName) }}
+                                    {{ form_errors(child.firstName) }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(child.lastName) }}
+                                    {{ form_widget(child.lastName) }}
+                                    {{ form_errors(child.lastName) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(child.manager.pesel) }}
+                                    {{ form_widget(child.manager.pesel) }}
+                                    {{ form_errors(child.manager.pesel) }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(child.manager.position) }}
+                                    {{ form_widget(child.manager.position) }}
+                                    {{ form_errors(child.manager.position) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(child.manager.phone) }}
+                                    {{ form_widget(child.manager.phone) }}
+                                    {{ form_errors(child.manager.phone) }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(child.email) }}
+                                    {% if child.manager.vars.data.id %}
+                                        {{ form_widget(child.email, {'attr': {'readonly': true}}) }}
+                                    {% else %}
+                                        {{ form_widget(child.email) }}
+                                    {% endif %}
+                                    {{ form_errors(child.email) }}
+                                </div>
+                            </div>
+                        </div>
+                        {% if app.request.get('step') != 'confirmation' %}
+                            <div class="pull-right width-200 margin-top-10">
+                                <button type="button"
+                                        class="btn btn-primary register-manager-save">
+                                    <span class="fa fa-check"></span>
+                                    {{ 'global.save'|trans }}
+                                </button>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% macro managerCollectionItem(child) %}
+    <div class="margin-bottom-40 collection-item">
+        <div class="panel panel-primary">
+            <div class="panel-body register-manager">
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="register-manager-name"
+                             {% if not child.vars.valid %}style="display: none"{% endif %}>
+                            {{ child.firstName.vars.value }} {{ child.lastName.vars.value }}
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="pull-right status-button">
+                            <span class="text-danger register-manager-discard">Odrzuć</span>
+                            <span class="text-success register-manager-details">Szczegóły</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="register-manager-data-row" style="display: block">
+                    <div class="row margin-top-30">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form_label(child.firstName) }}
+                                {{ form_widget(child.firstName) }}
+                                {{ form_errors(child.firstName) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form_label(child.lastName) }}
+                                {{ form_widget(child.lastName) }}
+                                {{ form_errors(child.lastName) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form_label(child.manager.pesel) }}
+                                {{ form_widget(child.manager.pesel) }}
+                                {{ form_errors(child.manager.pesel) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form_label(child.manager.position) }}
+                                {{ form_widget(child.manager.position) }}
+                                {{ form_errors(child.manager.position) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form_label(child.manager.phone) }}
+                                {{ form_widget(child.manager.phone) }}
+                                {{ form_errors(child.manager.phone) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form_label(child.email) }}
+                                {{ form_widget(child.email) }}
+                                {{ form_errors(child.email) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pull-right width-200 margin-top-10">
+                        <button type="button"
+                                class="btn btn-primary register-manager-save">
+                            <span class="fa fa-check"></span>
+                            {{ 'global.save'|trans }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

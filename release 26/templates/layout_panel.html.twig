@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+{% block main %}
+    <div class="wrapper">
+        <header class="main-header">
+            <!-- Logo -->
+            <a class="logo">
+                <!-- mini logo for sidebar mini 50x50 pixels -->
+                <span class="logo-mini"><b>M</b></span>
+                <!-- logo for regular state and mobile devices -->
+                <span class="logo-lg"><b>Mar</b>Monitor</span>
+            </a>
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                </a>
+
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <!-- Notifications: style can be found in dropdown.less -->
+                        <li class="dropdown notifications-menu">
+                            <a href="{{ path('notification_list') }}">
+                                <i class="fa fa-bell"></i>
+                                {% if countNewNotification(app.user) %}
+                                    <span class="label label-danger">{{ countNewNotification(app.user) }}</span>
+                                {% endif %}
+                            </a>
+                        </li>
+                        <!-- User Account: style can be found in dropdown.less -->
+                        <li class="user-info">
+                            {{ app.user.firstName }} {{ app.user.lastName }}<br/>
+                            <b>
+                                {% if is_granted('ROLE_MANAGER') %}
+                                    {{ 'global.manager_account'|trans }}
+                                {% else %}
+                                    {{ 'global.emitent_account'|trans }}
+                                {% endif %}
+                            </b>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- Left side column. contains the logo and sidebar -->
+        <aside class="main-sidebar">
+            <!-- sidebar: style can be found in sidebar.less -->
+            <section class="sidebar">
+                <!-- Sidebar user panel -->
+                <div class="user-panel">
+                    <div class="image float-left text-center">
+                        <img src="{{ asset('build/images/logo.png') }}" style="max-width: 60%" />
+                    </div>
+                </div>
+
+                {% include 'menu.html.twig' %}
+            </section>
+            <!-- /.sidebar -->
+            <div class="sidebar-footer">
+
+                <a href="{{ path('user_my_account') }}" class="link" data-toggle="tooltip" title=""
+                   data-original-title="Ustawienia">
+                    <i class="fa fa-cog fa-spin"></i>
+                </a>
+
+                <a href="{{ path('notification_list') }}" class="link" data-toggle="tooltip" title=""
+                   data-original-title="Powiadomienia">
+                    <i class="fa fa-bell"></i>
+                </a>
+
+                <a href="{{ path('security_logout') }}" class="link" data-toggle="tooltip" title=""
+                   data-original-title="Wyloguj">
+                    <i class="fa fa-power-off"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    {% block head %}{% endblock %}
+                    <small>{% block head_small %}{% endblock %}</small>
+                </h1>
+            </section>
+
+            <!-- Main content -->
+            <section class="content">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="panel-content">
+                            <div class="alert alert-{{ label }}" role="alert">
+                                {{ message|trans }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% block body %}{% endblock %}
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <a href="https://bip.kujawsko-pomorskie.pl" target="_blank">
+                <img src="{{ asset('build/images/logo_unia.png') }}" style="width: 90%"/>
+            </a>
+            <div class="clearfix"></div>
+            Copyright &copy; 2019 elixirSYC.
+        </footer>
+
+        <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
+        <div class="control-sidebar-bg"></div>
+
+    </div>
+    <!-- ./wrapper -->
+{% endblock %}

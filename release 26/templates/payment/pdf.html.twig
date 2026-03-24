@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'global.report_summary'|trans }}</title>
+    <style>
+        .text-center {
+            text-align: center;
+        }
+
+        h1 {
+            padding-top: 300px;
+        }
+
+        table.table {
+            margin-top: 60px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table.table td, table.table th {
+            padding: 8px 15px 8px 15px;
+            border: 1px solid #000000;
+        }
+
+        table.table th {
+            background: #cccccc;
+        }
+
+        label {
+            font-weight: bold;
+            color: #888888;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #d2d2d2;
+        }
+
+        .title {
+            margin-top: 30px;
+            background: #cccccc;
+            font-weight: bold;
+            font-size: 140%;
+            border-top: 1px solid #666666;
+            border-bottom: 1px solid #666666;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .title2 {
+            border-bottom: 1px solid #000000;
+        }
+
+        .title3 {
+            margin-top: 30px;
+            background: #cccccc;
+            font-weight: bold;
+            font-size: 130%;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        table.tab-small {
+            font-size: 80%;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+{% block body %}
+    <div style="float: left; width: 50%">
+        <img src="{{ base_dir ~ asset('build/images/logo.png') }}" style="width: 30%" />
+    </div>
+    <div style="float: right; width: 50%; text-align: right; font-size: 70%">
+        Data wystawienia: {{ invoice.date|date("d.m.Y") }} <b>Warszawa</b>
+    </div>
+    <div style="clear: both"></div>
+
+    <div class="title">
+        Faktura nr: {{ nr }}
+    </div>
+    <div style="font-size: 60%">
+        wg zamówienia: {{ invoice.date|date("d.m.Y") }}
+    </div>
+
+    <div style="margin-top: 30px">
+        <div style="float: left">
+            <div class="title2"><b>Sprzedawca:</b></div>
+            elixirSYC<br/>
+            Warszawa
+        </div>
+
+        <div style="float: left; margin-left: 30px">
+            <div class="title2"><b>Nabywca:</b></div>
+            {{ invoiceData.name }}<br/>
+            ul. {{ invoiceData.street }}
+            {{ invoiceData.houseNo }}
+            {% if invoiceData.apartmentNo %}
+                / {{ invoiceData.apartmentNo }}
+            {% endif %}
+            <br/>
+            {{ invoiceData.zipCode }} {{ invoiceData.city }}<br/>
+            nip: {{  invoiceData.nip }}
+        </div>
+
+        <div style="clear: both"></div>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>Lp.</th>
+            <th>Nazwa usługi</th>
+            <th>Ilość</th>
+            <th>Cena netto</th>
+            <th>Vat</th>
+            <th>Kwota VAT</th>
+            <th>Kwota brutto</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>{{ productName }}</td>
+            <td>1</td>
+            <td>{{ netto }}</td>
+            <td>{{ vat }}%</td>
+            <td>{{ amountVat }}</td>
+            <td>{{ productPrice }}</td>
+        </tr>
+    </table>
+
+    <table class="tab-small">
+        <tr>
+            <td>Sposób zapłaty:</td>
+            <td><b>przelew</b></td>
+        </tr>
+        <tr>
+            <td>Termin zapłaty:</td>
+            <td><b>zapłacono</b></td>
+        </tr>
+        <tr>
+            <td>Dostawa:</td>
+            <td><b>nie dotyczy</b></td>
+        </tr>
+    </table>
+
+    <div class="title3">
+        Do zapłaty: {{ productPrice }} zł
+    </div>
+
+    <div style="margin-top: 100px">
+        <div style="float: left; width: 50%">
+            &nbsp;<br/>
+            ..........................................................<br/>
+            <span style="font-size: 80%">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Osoba upoważniona do odbioru</span>
+        </div>
+
+        <div style="float: right; width: 50%; text-align: right">
+            Administrator Mar Monitor&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+            ..........................................................<br/>
+            <span style="font-size: 80%">Osoba upoważniona do wystawienia&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        </div>
+
+        <div style="clear: both"></div>
+    </div>
+{% endblock %}
+</body>
+</html>

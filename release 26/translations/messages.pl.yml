@@ -1,0 +1,231 @@
+global:
+  invoice_number: Numer faktury
+  name: Nazwa
+  street: Ulica
+  city: Miasto
+  zip_code: Kod pocztowy
+  nip: Nip
+  house_no: Nr mieszkania
+  invoice_data: Dane do faktury
+  product: Produkt
+  registration: Rejestracja
+  step: Krok
+  back: Wróć
+  next: Dalej
+  save: Zapisz
+  invoices: Faktury
+  confirm: Zatwierdź
+  create_account: Stwórz konto
+  email: Adres e-mail
+  password: Hasło
+  repeat_password: Powtórz hasło
+  first_name: Imię
+  last_name: Nazwisko
+  first_name2: Imię/Imiona
+  last_name2: Nazwisko/Nazwiska
+  first_last_name: Imię i nazwisko
+  krs_organization: Nr KRS organizacji
+  krs: Nr KRS organizacji
+  fill_organization_data: Uzupełnij dane organizacji
+  nip_optional: Nr NIP (opcjonalnie)
+  regon_optional: Nr REGON (opcjonalnie)
+  name_business_entity: Nazwa podmiotu
+  company_address: Adres siedziby
+  phone_contact: Telefon kontaktowy
+  pesel: PESEL
+  position: Stanowisko
+  phone: Nr Telefonu
+  give_manager_details: Podaj dane managerów
+  register_add_manager_info: Brakujących managerów można dodać w następnym kroku >>
+  add_manager_manually: Dodaj managera ręcznie
+  return_to_editing: Wróć do edycji
+  send_invitations: Wyślij zaproszenia
+  summary: Podsumowanie
+  login: login
+  hello: Witaj
+  confirmation: Potwierdzenie
+  go_to_panel: Idź do panelu
+  invitation_was_sended: Zaproszenia zostały wysłane do managerów
+  date_send: Data i godzina wysłania
+  email_exist: Adres e-mail już istnieje w bazie. Podaj inny.
+  details: szczegóły
+  last_login: Ostatnie logowanie
+  raport_status: Status raportu
+  krs_changes: Zmiany KRS
+  emitent_account: Konto emitenta
+  manager_account: Konto managera
+  notifications: Powiadomienia
+  reports: Raporty
+  users: Użytkownicy
+  company_data: Dane firmy
+  patterns_letters: Wzory pism
+  my_account: Moje konto
+  logout: Wyloguj
+  managers: Managerowie
+  issuers: Emitenci
+  add_emitent: Dodaj emitenta
+  add_manager: Dodaj managera
+  status: Status
+  active: Aktywny
+  inactive: Nieaktywny
+  save_changes: Zapisz zmiany
+  data_was_saved: Dane zostały zapisane.
+  new_manager: Dodaj managera
+  new_issuer: Dodaj emitenta
+  my_report: Mój raport
+  my_data: Moje dane
+  old_reports: Starsze raporty
+  new_report: Nowy raport
+  actual_report: Aktualny raport
+  documents: Dokumenty
+  create_first_report: Stwórz pierwszy raport
+  get_data_from_krs: Pobierz dane z KRS
+  dont_have_pesel: Nie posiadam nr PESEL
+  my_current_report: Mój aktualny raport
+  address: Adres
+  address_headquarters: Adres / siedziba
+  entities_closely_related: Podmioty blisko związane
+  person_closely_related: Osoby blisko związane z OPOZ
+  dont_have_entities_closely_related: Nie posiadam podmiotów blisko związanych
+  dont_have_person_closely_related: Nie posiadam osób blisko związanych w rozumieniu Rozporządzenia MAR
+  type_otc_related: Rodzaj powiązania z OTC
+  business_address: Adres prowadzenia działalności
+  kni: Krajowy nr identyfikacyjny
+  entity_name: Nazwa podmiotu
+  first_last_names: Imię (imiona) i nazwisko (nazwiska)
+  type_opoz_related: Rodzaj powiązania z OPOZ
+  add_new_entity: Dodaj nowy podmiot
+  add_new_person: Dodaj nową osobę
+  save_data: Zapisz dane
+  remember_me: zapamietaj mnie
+  log_in: Zaloguj się
+  log_in_text: Logowanie
+  remove: Usuń
+  generate_letter: Wygeneruj pismo
+  cancel: Anuluj
+  number: Numer
+  send_date: Data wysłania
+  report_status:
+    waiting: Oczekujący
+    approved: Zatwierdzony
+    rejected: Odrzucony
+  reason_rejection: Powód odrzucenia
+  register_as_emitent: Zarejestruj się jako Emitent
+  register_as_manager: Zarejestruj się jako Manager
+  go_further: Przejdź dalej
+  no_reports: Brak raportów
+  report_sent_to_emitent: Raport został wysłany do Emitenta
+  report_send_modal_info: Raport zostanie wygenerowany i wysłany do Emitenta
+  are_you_sure: Jesteś pewien
+  send: Wyślij
+  reports_unit: Raporty jednostkowe
+  reports_summary: Raporty zbiorcze
+  generated_date: Data wygenerowania
+  discard: Odrzuć
+  accept: Zatwierdź
+  view_report: Wyświetl raport
+  new_reports: Nowe raporty
+  actual_reports: Aktualne raporty
+  report_was_accepted: Raport został zatwierdzony
+  report_was_rejected: Raport został odrzucony
+  invoice_was_generated: Faktura została wygenerowana
+  discard_report: Odrzuć raport
+  rejection_of_the_report: Odrzucenie raportu
+  give_reason_for_rejection_of_report: Wyjaśnij powód odrzucenia raportu
+  report_view: Podgląd raportu
+  user_data: Dane użytkownika
+  manager: Manager
+  remove_account: Usuń konto
+  suspend_account: Zawieś konto
+  remove_account_password_info: W ramach zabezpieczenia prosimy o podanie hasła
+  remove_user: Usuń użytkownika
+  suspend_user: Zawieś użytkownika
+  enter_password: Podaj hasło
+  password_is_incorrect: Podane hasło jest niewłaściwe
+  user_was_deleted: Konto użytkownika zostało usunięte
+  user_was_suspended: Konto użytkownika zostało zawieszone
+  restore_account: Przywróć konto
+  restore_user: Przywróć użytkownika
+  user_was_restored: Konto użytkownika zostało przywrócone
+  title: Tytuł
+  date: Data
+  notification: Powiadomienia
+  view_details: Zobacz szczegóły
+  lack_notification: Brak powiadomień
+  here: tutaj
+  union_info: Projekt jest współfinansowany ze środków Europejskiego Funduszu Rozwoju Regionalnego w ramach Regionalnego Programu Operacyjnego Województwa Kujawsko-Pomorskiego na lata 2014-2020” Umowa o dofinansowanie nr WP-II-E.433.1.87.2017
+  search: Szukaj
+  instruction: Pouczenie
+  instruction_info: Tekst o tym że należy pobrać pdf, podpisać go i przedłożyć u emitenta ulorem ipsum dolor sit ametEvery large design company whether it’s a multi-national branding corporation or a regular down At heel tatty magazine publisher needs to fill holes in the workforce. If the canny freelance designer plays his or her cards right, he can earn a tidy sum while essentially loafing at home. Here’s how...<br/><br/> Have a handy repotoire of excuses lined up
+  instruction_statement_checkbox: Oświadczam że zapoznałem się z treścią pouczenia
+  instruction_info2: Tekst opisujący kto w spółce powinien być zarejestrowany w MAR-monitorze
+  download_later: Pobierz później
+  get_pdf_document: Pobierz dokument PDF
+  user_not_registered_account: Użytkownik nie zarejestrował jeszcze swojego konta
+  generate_new_report_summary: Wygeneruj nowy raport zbiorczy
+  send_report_to_emitent: Wyślij raport do Emitenta
+  generate_pdf: Generuj PDF
+  report_generate_pdf_info: Zostanie wygenerowany PDF z nowym raportem zbiorczym
+  company_name: Nazwa firmy
+  emitent_name: Imię i nazwisko emitenta
+  report_summary: Raport zbiorczy
+  report_was_generated: Raport został wygenerowany
+  description: Opis
+  view_pdf: Zobacz PDF
+  add_description: dodaj opis
+  change_password: Zmień hasło
+  password_was_changed: Hasło zostało zmienione
+  default_pattern: Domyślny wzór
+  patterns_name:
+    notify: Powiadomienie o obowiązkach notyfikacyjnych
+    to_manager: Powiadomienie o obowiązkach not. - manager
+    to_person: Powiadomienie o obowiązkach not. - osoba blisko związana
+    to_entity: Powiadomienie o obowiązkach not. - podmiot blisko związany
+  download_pdf: Pobierz PDF
+  show_letter: Pokaż pismo
+  read_more: Czytaj więcej
+  change_to_issuer_account: Konto emitenta
+  change_to_manager_account: Konto managera
+  connect_to_manager_account: Zaznacz, jeżeli chcesz, aby konto managera zostało połączone z Twoim kontem.
+  detect_connections: Wykryj powiązania
+  new_connections_was_detected: Wykryto nowe powiązania
+  no_new_connections_detected: Nie wykryto nowych powiązań
+  connections_was_deleted_api: Niektóre powiązania zostały usunięte z bazy KRS
+  user2: Użytkownika
+  summary2: zbiorcze
+  units2: jednostkowe
+  add: Dodaj
+  issuer2: emitenta
+  manager2: managera
+  data: Dane
+  company2: firmy
+  patterns: Wzory
+  letters: pism
+  my: Moje
+  account: konto
+  report: raport
+  my_current: Mój aktualny
+  old: Starsze
+  statistic: Statystyki
+  number_of_reports_during_the_month: Ilość wygenerowanych raportów w ciągu miesiąca
+  payment: Płatności
+
+email:
+  footer: pozdrawiamy,<br/>zespół elixirSYC
+  invitation_title: Zaproszenie na platformę elixirSYC
+  invitation_info: Zostałeś zaproszony na platformę elixirSYC.<br/>Możesz zarejestrować się pod adresem:
+  notification_title: Powiadomienie o obowiązkach notyfikacyjnych - elixirSYC
+  notification_info: 'Pan/i %user% członek rady nazdorczej %company% wygenerował pismo "Powiadomienie o obowiązkach notyfikacyjnych", które zostało przesłane do Ciebie w załączniku.'
+
+notification:
+  title_new_report_created: Nowy raport został wygenerowany
+  info_new_report_created: wygenerował nowy raport. Aby go zobaczyć kliknij
+  title_report_accepted: Raport został zatwierdzony
+  info_report_accepted: Twój raport został zatwierdzony przez emitenta. Aby go zobaczyć kliknij
+  title_report_discarded: Raport został odrzucony
+  info_report_discarded: Twój raport został odrzucony przez emitenta. Aby go zobaczyć kliknij
+
+label_next: Następna
+label_previous: Poprzednia
+
+

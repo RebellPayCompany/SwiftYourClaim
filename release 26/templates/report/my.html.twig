@@ -1,0 +1,555 @@
+{% extends 'layout_panel.html.twig' %}
+{% if form is defined %}
+    {% form_theme form _self %}
+{% endif %}
+
+{% import _self as macros %}
+
+{% block head %}
+    {{ 'global.my_current'|trans }}
+{% endblock %}
+
+{% block head_small %}
+    {{ 'global.report'|trans }}
+{% endblock %}
+
+{% block body %}
+    {% if form is defined %}
+        {{ form_start(form) }}
+
+        <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="text-uppercase box-title">{{ 'global.my_data'|trans }}</h3>
+                {% if form is defined %}
+                        <button type="button" class="btn btn-warning pull-right" id="send_to_emitent_button">
+                            <span class="fa fa-paper-plane"></span>
+                            {{ 'global.send_report_to_emitent'|trans }}
+                        </button>
+                {% endif %}
+            </div>
+
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            {{ form_label(form.data.pesel) }}
+                            {{ form_widget(form.data.pesel) }}
+                            {{ form_errors(form.data.pesel) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group margin-top-50">
+                            {{ form_widget(form.data.noPesel) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            {{ form_label(form.data.firstName) }}
+                            {{ form_widget(form.data.firstName) }}
+                            {{ form_errors(form.data.firstName) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            {{ form_label(form.data.lastName) }}
+                            {{ form_widget(form.data.lastName) }}
+                            {{ form_errors(form.data.lastName) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            {{ form_label(form.data.position) }}
+                            {{ form_widget(form.data.position) }}
+                            {{ form_errors(form.data.position) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            {{ form_label(form.data.address) }}
+                            {{ form_widget(form.data.address) }}
+                            {{ form_errors(form.data.address) }}
+                        </div>
+                    </div>
+                </div>
+                {% if form.vars.value.saved %}
+                    <div class="text-right margin-top-20">
+                        {% do form.data.submit.setRendered %}
+                        <a href="{{ path('report_detect_connections') }}"
+                           class="btn btn-primary">
+                            <span class="fa fa-handshake-o"></span>
+                            {{ 'global.detect_connections'|trans }}
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5">
+                <h3 style="margin-bottom: 0">{{ 'global.entities_closely_related'|trans }}</h3>
+            </div>
+            <div class="col-sm-7">
+                <div style="margin-top: 20px">{{ form_widget(form.noRelatedEntity) }}</div>
+            </div>
+        </div>
+
+        <div class="collection margin-top-20 collection-entity"
+             data-prototype="{{ macros.relatedEntityCollectionItem(form.relatedEntity.vars.prototype)|e }}"
+             {% if form.noRelatedEntity.vars.data %}style="display: none"{% endif %}>
+            {{ form_row(form.relatedEntity) }}
+            <div class="panel panel-add collection-add">
+                <div class="panel-body text-center bg-primary">
+                    <span class="fa fa-plus"></span> {{ 'global.add_new_entity'|trans }}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5">
+                <h3 style="margin-bottom: 0">{{ 'global.person_closely_related'|trans }}</h3>
+            </div>
+            <div class="col-sm-7">
+                <div style="margin-top: 20px">{{ form_widget(form.noRelatedPerson) }}</div>
+            </div>
+        </div>
+        <div class="collection margin-top-20 collection-person"
+             data-prototype="{{ macros.relatedPersonCollectionItem(form.relatedPerson.vars.prototype)|e }}"
+             {% if form.noRelatedPerson.vars.data %}style="display: none"{% endif %}>
+            {{ form_row(form.relatedPerson) }}
+            <div class="panel panel-add collection-add">
+                <div class="panel-body text-center bg-primary">
+                    <span class="fa fa-plus"></span> {{ 'global.add_new_person'|trans }}
+                </div>
+            </div>
+        </div>
+        <div class="margin-top-40 margin-bottom-70 text-center width-260">
+            <a href="{{ path('report_my') }}"
+               class="btn btn-default margin-right-10">{{ 'global.cancel'|trans }}</a>
+            {{ form_widget(form.submit) }}
+        </div>
+
+        {{ form_end(form) }}
+
+        <div class="modal fade" id="sendModal" tabindex="-1" role="dialog" aria-labelledby="sendModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="text-center margin-bottom-50 margin-top-50">
+                            <h3>{{ 'global.are_you_sure'|trans }}?</h3>
+                            <p>{{ 'global.report_send_modal_info'|trans }}.</p>
+                            <div class="width-200 margin-top-30">
+                                <button class="btn btn-default" data-dismiss="modal"
+                                        aria-label="Close">{{ 'global.cancel'|trans }}</button>
+                                <button class="btn btn-primary margin-left-10"
+                                        id="send_to_emitent_button_action">{{ 'global.send'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="panel-content">
+            <div class="row">
+                <div class="col-sm-10 max-width">
+                    <a href="{{ path('report_pesel') }}"
+                       class="btn btn-primary btn-big">{{ 'global.create_first_report'|trans }}</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="firstInfoModal" tabindex="-1" role="dialog" aria-labelledby="firstInfoModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="margin-bottom-50 margin-top-50">
+                            <h3 class="text-center">{{ 'global.instruction'|trans }}</h3>
+                            <p>{{ 'global.instruction_info'|trans|raw }}</p>
+                            <p class="margin-top-30 margin-bottom-40">
+                                <input type="checkbox"/>
+                                {{ 'global.instruction_statement_checkbox'|trans }}
+                            </p>
+                            <div class="width-300 margin-top-30 text-center">
+                                <button class="btn btn-default" data-dismiss="modal"
+                                        aria-label="Close">{{ 'global.download_later'|trans }}</button>
+                                <button class="btn btn-primary margin-left-10">{{ 'global.get_pdf_document'|trans }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function () {
+            $("#send_to_emitent_button").click(function () {
+                $("#sendModal").modal();
+            });
+
+            $("#send_to_emitent_button_action").click(function () {
+                $("#report_sendToIssuer").val(1);
+                $("form[name=report]").submit();
+            });
+
+            {% if managerRegisterInfo is defined and managerRegisterInfo %}
+            $("#firstInfoModal").modal();
+            {% endif %}
+
+            $(".generate-letter-pdf").click(function () {
+                var obj = $(this);
+                var parent = obj.parent();
+                obj.remove();
+                parent.find('.loading').show();
+
+                var id = $(this).data("id");
+                var type = $(this).data("type");
+
+                var url = Routing.generate('document_generate_to_subject_pdf', {'id': id});
+
+                $.ajax({
+                    method: "POST",
+                    url: url,
+                    data: {'type': type}
+                }).done(function (file) {
+                    parent.find('.loading').hide();
+                    var html = '<a href="/uploads/documents/' + file + '" class="btn btn-small btn-success" target="_blank">{{ 'global.show_letter'|trans }}</a>';
+                    parent.append(html);
+                });
+            });
+
+            $("#report_data_noPesel").click(function () {
+                if (this.checked) {
+                    $("#report_data_pesel").val("");
+                    $('#report_data_pesel').prop('readonly', true);
+                } else {
+                    $('#report_data_pesel').prop('readonly', false);
+                }
+            });
+
+            if ($('#report_data_noPesel').is(':checked')) {
+                $('#report_data_pesel').prop('readonly', true);
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block _report_relatedEntity_row %}
+    {% for child in form.children %}
+        <div class="box box-primary form3 collection-item {% if child.vars.value.detect %}panel-detect{% endif %} {% if child.vars.value.deleted %}panel-deleted{% endif %}">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="form-group">
+                                    {{ form_label(child.name) }}
+                                    {{ form_widget(child.name) }}
+                                    {{ form_errors(child.name) }}
+                                </div>
+                            </div>
+                            <div class="col-sm-7">
+                                <div class="form-group">
+                                    {{ form_label(child.address) }}
+                                    {{ form_widget(child.address) }}
+                                    {{ form_errors(child.address) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(child.typeOtcRelated) }}
+                                    {{ form_widget(child.typeOtcRelated) }}
+                                    {{ form_errors(child.typeOtcRelated) }}
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(child.phone) }}
+                                    {{ form_widget(child.phone) }}
+                                    {{ form_errors(child.phone) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="row">
+                            <div class="col-sm-5">
+                                <div class="form-group">
+                                    {{ form_label(child.email) }}
+                                    {{ form_widget(child.email) }}
+                                    {{ form_errors(child.email) }}
+                                </div>
+                            </div>
+                            <div class="col-sm-7">
+                                <div class="form-group">
+                                    {{ form_label(child.businessAddress) }}
+                                    {{ form_widget(child.businessAddress) }}
+                                    {{ form_errors(child.businessAddress) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    {{ form_label(child.kni) }}
+                                    {{ form_widget(child.kni) }}
+                                    {{ form_errors(child.kni) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row margin-top-20">
+                    <div class="col-sm-5">
+                        {% if child.vars.value.statusDate %}
+                            <div class="state_date">Stan na dzień {{ child.vars.value.statusDate|date("d.m.Y") }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-7 text-right margin-top-10-sm">
+                        <span class="width-200 margin-right-10">
+                            <button class="btn btn-small btn-danger collection-remove"
+                                    type="button">
+                                <span class="fa fa-remove"></span>
+                                {{ 'global.remove'|trans }}
+                            </button>
+                        </span>
+
+                        {% if child.parent.parent.vars.value.saved and not child.vars.value.detect %}
+                            <span>
+                                <img src="{{ asset('build/images/loading.gif') }}" style="width: 40px; display: none"
+                                     class="loading"/>
+                                {% if child.vars.value.document %}
+                                    <a href="{{ asset('uploads/documents/'~child.vars.value.document) }}"
+                                       class="btn btn-small btn-success" target="_blank">
+                                        <span class="fa fa-file"></span>
+                                        {{ 'global.show_letter'|trans }}
+                                    </a>
+                                {% else %}
+                                    <button class="btn btn-small btn-success generate-letter-pdf"
+                                            type="button" data-id="{{ child.vars.value.id }}"
+                                            data-type="entity">
+                                        <span class="fa fa-file-text-o"></span>
+                                        {{ 'global.generate_letter'|trans }}
+                                    </button>
+                                {% endif %}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% macro relatedEntityCollectionItem(child) %}
+    <div class="box box-primary form3 collection-item">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                {{ form_label(child.name) }}
+                                {{ form_widget(child.name) }}
+                                {{ form_errors(child.name) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                {{ form_label(child.address) }}
+                                {{ form_widget(child.address) }}
+                                {{ form_errors(child.address) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form_label(child.typeOtcRelated) }}
+                                {{ form_widget(child.typeOtcRelated) }}
+                                {{ form_errors(child.typeOtcRelated) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form_label(child.phone) }}
+                                {{ form_widget(child.phone) }}
+                                {{ form_errors(child.phone) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-7">
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                {{ form_label(child.email) }}
+                                {{ form_widget(child.email) }}
+                                {{ form_errors(child.email) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-7">
+                            <div class="form-group">
+                                {{ form_label(child.businessAddress) }}
+                                {{ form_widget(child.businessAddress) }}
+                                {{ form_errors(child.businessAddress) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form_label(child.kni) }}
+                                {{ form_widget(child.kni) }}
+                                {{ form_errors(child.kni) }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 margin-top-15 text-right">
+                            <button class="btn btn-small btn-danger collection-remove"
+                                    type="button">{{ 'global.remove'|trans }}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% block _report_relatedPerson_row %}
+    {% for child in form.children %}
+        <div class="box box-primary form3 collection-item">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            {{ form_label(child.name) }}
+                            {{ form_widget(child.name) }}
+                            {{ form_errors(child.name) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            {{ form_label(child.typeOpozRelated) }}
+                            {{ form_widget(child.typeOpozRelated) }}
+                            {{ form_errors(child.typeOpozRelated) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            {{ form_label(child.email) }}
+                            {{ form_widget(child.email) }}
+                            {{ form_errors(child.email) }}
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            {{ form_label(child.phone) }}
+                            {{ form_widget(child.phone) }}
+                            {{ form_errors(child.phone) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row margin-top-20">
+                    <div class="col-sm-5">
+                        {% if child.vars.value.statusDate %}
+                            <div class="state_date">Stan na dzień {{ child.vars.value.statusDate|date("d.m.Y") }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-7 text-right margin-top-10-sm">
+                        <span class="width-200 margin-right-10">
+                            <button class="btn btn-small btn-danger collection-remove"
+                                    type="button">
+                                <span class="fa fa-remove"></span>
+                                {{ 'global.remove'|trans }}
+                            </button>
+                        </span>
+                        <span>
+                            <img src="{{ asset('build/images/loading.gif') }}" style="width: 40px; display: none"
+                                 class="loading"/>
+                            {% if child.vars.value.document %}
+                                <a href="{{ asset('uploads/documents/'~child.vars.value.document) }}"
+                                   class="btn btn-small btn-success" target="_blank">
+                                    <span class="fa fa-file"></span>
+                                    {{ 'global.show_letter'|trans }}
+                                </a>
+                            {% else %}
+                                <button class="btn btn-small btn-success generate-letter-pdf"
+                                        type="button" data-id="{{ child.vars.value.id }}"
+                                        data-type="person">
+                                    <span class="fa fa-file-text-o"></span>
+                                    {{ 'global.generate_letter'|trans }}
+                                </button>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% macro relatedPersonCollectionItem(child) %}
+    <div class="box box-primary form3 collection-item">
+        <div class="box-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(child.name) }}
+                        {{ form_widget(child.name) }}
+                        {{ form_errors(child.name) }}
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(child.typeOpozRelated) }}
+                        {{ form_widget(child.typeOpozRelated) }}
+                        {{ form_errors(child.typeOpozRelated) }}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(child.email) }}
+                        {{ form_widget(child.email) }}
+                        {{ form_errors(child.email) }}
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(child.phone) }}
+                        {{ form_widget(child.phone) }}
+                        {{ form_errors(child.phone) }}
+                    </div>
+                </div>
+            </div>
+            <div class="text-right margin-top-10">
+                <button class="btn btn-small btn-danger collection-remove"
+                        type="button">{{ 'global.remove'|trans }}</button>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

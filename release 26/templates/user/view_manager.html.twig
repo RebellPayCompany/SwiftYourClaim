@@ -1,0 +1,160 @@
+{% extends 'layout_panel.html.twig' %}
+
+{% block head %}
+    {{ manager.firstName }} {{ manager.lastName }}
+{% endblock %}
+
+{% block head_small %}
+    ({{ 'global.manager'|trans }})
+{% endblock %}
+
+{% block body %}
+    <div class="box box-primary">
+        {% set _route = app.request.get('_route') %}
+        <ul class="nav nav-tabs">
+            <li {% if _route =='user_managers_view' %}class="active"{% endif %}><a
+                        href="{{ path('user_managers_view', {'manager': manager.id}) }}">{{ 'global.user_data'|trans }}</a>
+            </li>
+            <li {% if _route =='report_unit_list_manager' %}class="active"{% endif %}><a
+                        href="{{ path('report_unit_list_manager', {'manager': manager.id}) }}">{{ 'global.reports'|trans }}</a>
+            </li>
+        </ul>
+
+        <div class="box-body form2">
+            {% if manager.registered %}
+                {% if manager.enabled %}
+                    <span class="pull-right">
+                    <button class="btn btn-danger user-stop-account" data-action="remove"
+                            data-id="{{ manager.id }}">{{ 'global.remove_account'|trans }}</button>
+                    <button class="btn btn-success user-stop-account" data-action="suspend"
+                            data-id="{{ manager.id }}">{{ 'global.suspend_account'|trans }}</button>
+                </span>
+                {% else %}
+                    <span class="pull-right">
+                    <button class="btn btn-success user-stop-account" data-action="restore"
+                            data-id="{{ manager.id }}">{{ 'global.restore_account'|trans }}</button>
+                </span>
+                {% endif %}
+            {% endif %}
+
+            {% if not manager.registered %}
+                <div class="margin-bottom-15">
+                    <span class="text-danger">{{ 'global.user_not_registered_account'|trans }}.</span>
+                </div>
+            {% endif %}
+
+            {{ form_start(form) }}
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(form.manager.pesel) }}
+                        {{ form_widget(form.manager.pesel) }}
+                        {{ form_errors(form.manager.pesel) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(form.firstName) }}
+                        {{ form_widget(form.firstName) }}
+                        {{ form_errors(form.firstName) }}
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(form.lastName) }}
+                        {{ form_widget(form.lastName) }}
+                        {{ form_errors(form.lastName) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(form.manager.position) }}
+                        {{ form_widget(form.manager.position) }}
+                        {{ form_errors(form.manager.position) }}
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(form.manager.phone) }}
+                        {{ form_widget(form.manager.phone) }}
+                        {{ form_errors(form.manager.phone) }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(form.manager.address) }}
+                        {{ form_widget(form.manager.address) }}
+                        {{ form_errors(form.manager.address) }}
+                    </div>
+                </div>
+            </div>
+            <div class="pull-right">
+                {{ form_widget(form.submit) }}
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <div class="modal fade" id="stopAccountModal" tabindex="-1" role="dialog" aria-labelledby="stopAccountModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="modal-body-text margin-top-50 margin-bottom-60"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(".user-stop-account").click(function () {
+            var action = $(this).data("action");
+
+            var id = $(this).data("id");
+            var url = Routing.generate('user_managers_stop', {'manager': id});
+
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: {'action': action}
+            }).done(function (msg) {
+                $("#stopAccountModal .modal-body-text").html(msg);
+                $("#stopAccountModal").modal();
+            });
+        })
+
+        jQuery(document.body).on('click', '#user-stop-account-set', function () {
+            var id = $(this).data("id");
+            var action = $(this).data("action");
+            var password = $("#stop_account_password").val();
+
+            var url = Routing.generate('user_managers_stop', {'manager': id});
+
+            $.ajax({
+                method: "POST",
+                url: url,
+                data: {'action': action, 'password': password, 'set': 1}
+            }).done(function (msg) {
+                if (msg) {
+                    $("#stopAccountModal .modal-body-text").html(msg);
+                    $("#stopAccountModal").modal();
+                } else {
+                    location.href = Routing.generate('user_managers');
+                }
+            });
+        });
+    </script>
+{% endblock %}

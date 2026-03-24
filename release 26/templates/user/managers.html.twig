@@ -1,0 +1,83 @@
+{% extends 'layout_panel.html.twig' %}
+
+{% block head %}
+    {{ 'global.users'|trans }}
+{% endblock %}
+
+{% block head_small %}
+    {{ 'global.managers'|trans }}
+{% endblock %}
+
+
+{% block body %}
+    {% set _route = app.request.get('_route') %}
+    <div class="box box-primary">
+        <ul class="nav nav-tabs">
+            <li {% if _route =='user_managers' %}class="active"{% endif %}><a
+                        href="{{ path('user_managers') }}">{{ 'global.managers'|trans }}</a></li>
+            <li {% if _route =='user_issuers' %}class="active"{% endif %}><a
+                        href="{{ path('user_issuers') }}">{{ 'global.issuers'|trans }}</a></li>
+        </ul>
+
+        <div class="box-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <tr class="thpt">
+                        <th class="thpt">{{ knp_pagination_sortable(managers, 'global.first_name'|trans, 'u.firstName') }}</th>
+                        <th class="thpt">{{ knp_pagination_sortable(managers, 'global.last_name'|trans, 'u.lastName') }}</th>
+                        <th class="thpt">{{ knp_pagination_sortable(managers, 'global.position'|trans, 'm.position') }}</th>
+                        <th class="thpt">{{ knp_pagination_sortable(managers, 'global.last_login'|trans, 'u.lastLogin') }}</th>
+                        <th class="thpt">{{ 'global.raport_status'|trans }}</th>
+                        <th class="thpt">{{ 'global.krs_changes'|trans }}</th>
+                        <th class="text-right">
+                            <a href="{{ path('user_managers_new') }}"
+                               class="btn btn-primary">
+                                <span class="fa fa-plus"></span>
+                                {{ 'global.add_manager'|trans }}
+                            </a>
+                        </th>
+                    </tr>
+                    {% for manager in managers %}
+                        {% set reportManager = manager.reportManager %}
+                        {% if reportManager[0] is defined %}
+                            {% set report = reportManager[0] %}
+                        {% else %}
+                            {% set report = null %}
+                        {% endif %}
+
+                        <tr {% if not manager.enabled %}class="text-danger"{% endif %}>
+                            <td>{{ manager.firstName }}</td>
+                            <td>{{ manager.lastName }}</td>
+                            <td>
+                                {% if manager.manager %}{{ manager.manager.position }}{% endif %}
+                            </td>
+                            <td>{% if manager.lastLogin %}{{ manager.lastLogin|date('d.m.Y, H:i') }}{% endif %}</td>
+                            <td>
+                                {% if report and report.status %}
+                                    <span class="report-status-{{ report.status }}">{{ report.statusName|trans }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if report and report.changeKrs %}
+                                    <span class="glyphicon glyphicon-exclamation-sign text-danger"
+                                          style="font-size: 120%"></span>
+                                {% endif %}
+                            </td>
+                            <td class="text-right">
+                                <a href="{{ path('user_managers_view', {'manager': manager.id}) }}"
+                                   class="btn btn-success">
+                                    <span class="fa fa-search-plus"></span>
+                                    {{ 'global.details'|trans }}
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+
+                <div class="text-right">
+                    {{ knp_pagination_render(managers) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

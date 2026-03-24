@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'global.report_summary'|trans }}</title>
+    <style>
+        .text-center {
+            text-align: center;
+        }
+
+        h1 {
+            padding-top: 300px;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        table td {
+            padding: 8px 15px 8px 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #888888;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #d2d2d2;
+        }
+    </style>
+</head>
+
+<body>
+{% block body %}
+    <h1 class="text-center" style="margin-bottom: 0">{{ 'global.report_summary'|trans }}</h1>
+    <p class="text-center" style="margin-top: 3px">({{ number }})</p>
+    <br/>
+    <table style="font-size: 120%">
+        <tr>
+            <td style="padding-left: 0"><b>{{ 'global.generated_date'|trans }}:</b></td>
+            <td>{{ date|date("d.m.Y") }}</td>
+        </tr>
+        <tr>
+            <td style="padding-left: 0"><b>{{ 'global.company_name'|trans }}:</b></td>
+            <td>{{ company.name }}</td>
+        </tr>
+        <tr>
+            <td style="padding-left: 0"><b>{{ 'global.emitent_name'|trans }}:</b></td>
+            <td>{{ app.user.firstName }} {{ app.user.lastName }}</td>
+        </tr>
+    </table>
+
+    <div style="page-break-after: always;"></div>
+
+    {% for report in reports %}
+        <h2><u>{{ report.data.firstName }} {{ report.data.lastName }}</u></h2>
+
+        <table>
+            <tr>
+                <td style="padding-left: 0">
+                    <label>{{ 'global.pesel'|trans }}</label>
+                    <div class="text">{{ report.data.pesel }}</div>
+                </td>
+                <td>
+                    <label>{{ 'global.position'|trans }}</label>
+                    <div class="text">{{ report.data.position }}</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-left: 0">
+                    <label>{{ 'global.address'|trans }}</label>
+                    <div class="text">{{ report.data.address }}</div>
+                </td>
+            </tr>
+        </table>
+
+        <h3 class="text-grey margin-bottom-30">{{ 'global.entities_closely_related'|trans }}</h3>
+        {% for entity in report.relatedEntity %}
+            <table width="100%">
+                <tr>
+                    <td style="padding-left: 0" width="22%">
+                        <label>{{ 'global.entity_name'|trans }}</label>
+                        <div class="text">{{ entity.name }}</div>
+                    </td>
+                    <td width="30%">
+                        <label>{{ 'global.address'|trans }}</label>
+                        <div class="text">{{ entity.address }}</div>
+                    </td>
+                    <td width="26%">
+                        <label>{{ 'global.type_otc_related'|trans }}</label>
+                        <div class="text">{{ entity.typeOtcRelated }}</div>
+                    </td>
+                    <td>
+                        <label>{{ 'global.phone_contact'|trans }}</label>
+                        <div class="text">{{ entity.phone }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 0">
+                        <label>{{ 'global.email'|trans }}</label>
+                        <div class="text">{{ entity.email }}</div>
+                    </td>
+                    <td>
+                        <label>{{ 'global.business_address'|trans }}</label>
+                        <div class="text">{{ entity.businessAddress }}</div>
+                    </td>
+                    <td>
+                        <label>{{ 'global.kni'|trans }}</label>
+                        <div class="text">{{ entity.kni }}</div>
+                    </td>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+            {% if report.relatedEntity|length > 1 and loop.index < report.relatedEntity|length %}
+            <hr/>
+            {% endif %}
+        {% endfor %}
+
+        <h3 class="text-grey margin-bottom-30">{{ 'global.person_closely_related'|trans }}</h3>
+        {% for person in report.relatedPerson %}
+            <table>
+                <tr>
+                    <td style="padding-left: 0" width="30%">
+                        <label>{{ 'global.first_last_names'|trans }}</label>
+                        <div class="text">{{ person.name }}</div>
+                    </td>
+                    <td>
+                        <label>{{ 'global.address'|trans }}</label>
+                        <div class="text">{{ person.typeOpozRelated }}</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-left: 0;">
+                        <label>{{ 'global.email'|trans }}</label>
+                        <div class="text">{{ person.email }}</div>
+                    </td>
+                    <td>
+                        <label>{{ 'global.phone_contact'|trans }}</label>
+                        <div class="text">{{ person.phone }}</div>
+                    </td>
+                </tr>
+            </table>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
+</body>
+</html>
